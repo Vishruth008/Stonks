@@ -1,0 +1,192 @@
+openapi: 3.0.0
+info:
+  title: User Account Management API
+  description: API for managing user accounts.
+  version: 1.0.0
+
+servers:
+  - url: https://localhost:3500
+
+paths:
+  /users:
+    post:
+      summary: Create a new user
+      description: Creates a new user with the provided details.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserCreateRequest"
+      responses:
+        "201":
+          description: User created
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+
+  /users/{userId}:
+    get:
+      summary: Get a user by ID
+      description: Retrieves details of a user based on the provided user ID.
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: User details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+
+    delete:
+      summary: Delete a user
+      description: Deletes a user based on the provided user ID.
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: User deleted
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+
+    patch:
+      summary: Update user details (partial update)
+      description: Updates specific details (password, email, profile picture) of a user based on the provided user ID.
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserUpdateRequest"
+      responses:
+        "200":
+          description: User updated
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+
+components:
+  schemas:
+    UserCreateRequest:
+      type: object
+      required:
+        - personId
+        - username
+        - password
+        - email
+      properties:
+        personId:
+          type: string
+          description: A unique identifier for the related person object.
+          example: "12345"
+        username:
+          type: string
+          description: The public identifier or display name of the user.
+          example: "john_doe"
+        password:
+          type: string
+          description: The confidential authentication information for the user.
+          example: "strongPassword123"
+        email:
+          type: string
+          description: The email address associated with the user for communication and notifications.
+          example: "john.doe@example.com"
+        profilePicture:
+          type: string
+          format: uri
+          description: URL or reference to the profile picture of the user.
+          example: "https://example.com/profile.jpg"
+
+    UserUpdateRequest:
+      type: object
+      properties:
+        password:
+          type: string
+          description: The new password for the user.
+          example: "newStrongPassword456"
+        email:
+          type: string
+          description: The new email address for the user.
+          example: "john.doe.updated@example.com"
+        profilePicture:
+          type: string
+          format: uri
+          description: URL or reference to the new profile picture of the user.
+          example: "https://example.com/new_profile.jpg"
+
+    User:
+      type: object
+      properties:
+        personId:
+          type: string
+          description: A unique identifier for the related person object.
+          example: "12345"
+        username:
+          type: string
+          description: The public identifier or display name of the user.
+          example: "john_doe"
+        password:
+          type: string
+          description: The confidential authentication information for the user.
+          example: "hashedPassword123"
+        email:
+          type: string
+          description: The email address associated with the user for communication and notifications.
+          example: "john.doe@example.com"
+        status:
+          type: string
+          enum: ["active", "blocked", "deactivated"]
+          default: "active" # Default to active
+          example: "active"
+        profilePicture:
+          type: string
+          format: uri
+          description: URL or reference to the profile picture of the user.
+          example: "https://example.com/profile.jpg"

@@ -1,0 +1,193 @@
+openapi: 3.0.0
+info:
+  title: Personal Details Management API
+  description: API for managing personal details.
+  version: 1.0.0
+
+servers:
+  - url: https://localhost:3500
+
+paths:
+  /persons:
+    post:
+      summary: Create a new person.
+      description: Endpoint to create a new person with provided details.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PersonCreateRequest"
+      responses:
+        "201":
+          description: Person Created
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+
+  /persons/{personId}:
+    get:
+      summary: Get the person by ID
+      description: Retrieve details of a person by their unique identifier.
+      parameters:
+        - name: personId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Person details successfully retrieved.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Person"
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+
+    delete:
+      summary: Delete Person
+      description: Delete a person by their unique identifier.
+      parameters:
+        - name: personId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Person deleted.
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+
+    patch:
+      summary: Update phoneNo
+      description: Update the phone number of a person by their unique identifier.
+      parameters:
+        - name: personId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PersonUpdateRequest"
+      responses:
+        "200":
+          description: PhoneNo updated
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+
+components:
+  schemas:
+    PersonCreateRequest:
+      type: object
+      required:
+        - firstName
+        - lastName
+        - dob
+        - gender
+        - phoneNo
+      properties:
+        firstName:
+          type: string
+          description: The first name of the person.
+          example: John
+        lastName:
+          type: string
+          description: The last name of the person.
+          example: Doe
+        dob:
+          type: string
+          format: date
+          description: The date of birth of the person.
+          example: 1990-01-01
+        gender:
+          type: string
+          description: The gender identity of the person.
+          example: male
+        phoneNo:
+          type: string
+          description: The phone number of the person in E.164 format.
+          pattern: "^\\+[1-9]\\d{1,14}$"
+          example: "+1234567890123"
+
+    PersonUpdateRequest:
+      type: object
+      properties:
+        phoneNo:
+          type: string
+          description: The phone number of the person in E.164 format.
+          pattern: "^\\+[1-9]\\d{1,14}$"
+          example: "+1234567890123"
+
+    Person:
+      type: object
+      required:
+        - personId
+        - firstName
+        - lastName
+        - dob
+        - gender
+        - phoneNo
+      properties:
+        personId:
+          type: string
+          description: A unique identifier for the person.
+          example: "person123"
+        firstName:
+          type: string
+          description: The first name of the person.
+          example: John
+        lastName:
+          type: string
+          description: The last name of the person.
+          example: Doe
+        dob:
+          type: string
+          format: date
+          description: The date of birth of the person.
+          example: 1990-01-01
+        gender:
+          type: string
+          description: The gender identity of the person.
+          example: male
+        phoneNo:
+          type: string
+          description: The phone number of the person in E.164 format.
+          pattern: "^\\+[1-9]\\d{1,14}$"
+          example: "+1234567890123"

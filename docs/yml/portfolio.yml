@@ -1,0 +1,139 @@
+openapi: 3.1.0
+info:
+  title: Stock Trading Portfolio Management API
+  description: API for managing user portfolios in a stock trading website. It allows users to view their portfolio, add transactions, and view transaction history.
+  version: "v1.0"
+
+servers:
+  - url: https://localhost:8080
+    description: Main server
+
+paths:
+  /portfolio:
+    get:
+      summary: Get user's portfolio
+      description: Retrieves the portfolio of the authenticated user, including stock symbols, quantities, and values.
+      responses:
+        '200':
+          description: A list of portfolio items for the user.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  userId:
+                    type: string
+                    description: The unique identifier of the user.
+                    example: "user123"
+                  portfolio:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/PortfolioItem'
+                    description: An array of portfolio items.
+        '401':
+          description: Unauthorized access.
+        '500':
+          description: Internal server error.
+
+    post:
+      summary: Add a transaction to the portfolio
+      description: Adds a new transaction to the user's portfolio, such as buying or selling a stock.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Transaction'
+      responses:
+        '201':
+          description: Transaction added successfully.
+        '400':
+          description: Bad request, invalid input data.
+        '401':
+          description: Unauthorized access.
+        '500':
+          description: Internal server error.
+
+  /transactions:
+    get:
+      summary: Get user's transaction history
+      description: Retrieves a list of all transactions made by the user, including buys and sells.
+      responses: 
+
+       
+        '200':
+          description: A list of transactions for the user.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Transaction'
+        '401':
+          description: Unauthorized access.
+        '500':
+          description: Internal server error.
+
+components:
+  schemas:
+    PortfolioItem:
+      type: object
+      required:
+        - symbol
+        - quantity
+        - price
+        - totalValue
+      properties:
+        symbol:
+          type: string
+          description: Stock symbol.
+          example: "AAPL"
+        quantity:
+          type: integer
+          description: Number of shares.
+          example: 10
+        price:
+          type: number
+          description: Price per share in USD.
+          example: 150.50
+        totalValue:
+          type: number
+          description: Total value of the holding in USD.
+          example: 1505.00
+
+    Transaction:
+      type: object
+      required:
+        - symbol
+        - quantity
+        - price
+      properties:
+        symbol:
+          type: string
+          description: Stock symbol involved in the transaction.
+          example: "AAPL"
+        quantity:
+          type: integer
+          description: Number of shares traded.
+          example: 5
+        price:
+          type: number
+          description: Transaction price per share in USD.
+          example: 150.00
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Authentication scheme using JWT bearer tokens.
+
+security:
+  - bearerAuth: []
+
+tags:
+  - name: Portfolio
+    description: Operations related to user portfolios
+
+  - name: Transactions
+    description: Operations related to user transactions

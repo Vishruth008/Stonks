@@ -1,0 +1,95 @@
+openapi: 3.0.0
+info:
+  title: Stock Trading Technical Analysis API
+  description: API for performing technical analysis on stock data.
+  version: 2.0.0
+ 
+servers:
+  - url: https://api.example.com/v2
+    description: Production server
+ 
+paths:
+  /technical-analysis/indicators:
+    get:
+      summary: Get a list of available technical indicators
+      description: |
+        Retrieves a list of technical indicators that can be used for stock analysis.
+
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TechnicalIndicator'
+ 
+  /technical-analysis/sma:
+    get:
+      summary: Calculate Simple Moving Average (SMA)
+      description: |
+        Calculates the Simple Moving Average (SMA) for a given stock symbol and period.
+
+      parameters:
+        - name: symbol
+          in: query
+          description: Stock symbol (e.g., AAPL).
+          required: true
+          schema:
+            type: string
+          example: "AAPL"  
+
+        - name: period
+          in: query
+          description: Period for SMA calculation (e.g., 50).
+          required: true
+          schema:
+            type: integer
+          example: 50  
+
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SMAData'
+ 
+components:
+  schemas:
+    TechnicalIndicator:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the technical indicator.
+          example: "rsi"
+        name:
+          type: string
+          description: Name of the technical indicator.
+          example: "Relative Strength Index (RSI)"
+        description:
+          type: string
+          description: Description of the technical indicator.
+          example: "A momentum oscillator that measures the speed and change of price movements."
+
+    SMAData:
+      type: object
+      properties:
+        symbol:
+          type: string
+          description: Stock symbol for which SMA is calculated.
+          example: "AAPL"
+        period:
+          type: integer
+          description: Period used for SMA calculation.
+          example: 50
+        sma:
+          type: number
+          description: The calculated Simple Moving Average (SMA) value.
+          example: 150.75
+ 
+tags:
+  - name: Technical Analysis
+    description: Operations related to technical analysis of stock data.
