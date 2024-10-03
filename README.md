@@ -78,6 +78,12 @@ After signing in, the dashboard offers a plethora of tools and features:
 - **Investment Strategy Testing**: Test and refine your investment strategies using historical data and market simulations.
 - **Community Engagement**: Share insights and learn from other users through our community forum.
 
+  ## Contributors
+    - Vishruth Telugu Venugopal
+    - Ujwal Chandrashekar
+    - Rajeev Ramesh
+    - Rakshith Rajkumar
+
 ## Support
 
 For support, questions, or feedback, please contact via email or LinkedIn.
